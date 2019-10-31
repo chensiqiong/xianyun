@@ -42,20 +42,18 @@ export default {
       //   .catch(err => {
       //     console.log(err);
       //   });
-      this.$store
-        .dispatch("users/setUserInfo", data)
-        .then(res => {
-          console.log(res);
-          if (res.status) {
-            this.$message.success("登录成功");
-            setTimeout(() => {
-              this.$router.push("/");
-            }, 1000);
-          }
-        })
-        .catch(err => {
-          this.$message.error("登录失败，请检查用户名和密码");
-        });
+      this.$store.dispatch("users/setUserInfo", data).then(res => {
+        console.log(res);
+        if (res.status) {
+          this.$message.success("登录成功");
+          setTimeout(() => {
+            this.$router.push("/");
+          }, 1000);
+        }
+      });
+      // .catch(err => {
+      //   this.$message.error("登录失败，请检查用户名和密码");
+      // });
     }
   },
   mounted() {}

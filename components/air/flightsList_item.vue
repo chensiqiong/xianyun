@@ -7,7 +7,7 @@
           <p>{{flightsItem.dep_time}}</p>
           <p>&nbsp;&nbsp;{{flightsItem.org_airport_name}}{{flightsItem.org_airport_quay}}</p>
         </div>
-        <div class="duration">2时20分</div>
+        <div class="duration">{{duration}}</div>
         <div class="item_dest_date">
           <p>{{flightsItem.arr_time}}</p>
           <p>{{flightsItem.dst_airport_name}}{{flightsItem.dst_airport_quay}}</p>
@@ -50,6 +50,20 @@ export default {
     return {
       isShow: false
     };
+  },
+  mounted() {
+    console.log(this.flightsItem);
+  },
+  computed: {
+    // 处理时间间隔
+    duration() {
+      let startTime = new Date(this.flightsItem.dep_datetime);
+      let arriveTime = new Date(this.flightsItem.arr_datetime);
+      let duration = arriveTime - startTime;
+      let hours = parseInt(duration / 1000 / 60 / 60);
+      let minutes = duration / 1000 / 60 - hours * 60;
+      return `${hours}时${minutes}分`;
+    }
   }
 };
 </script>
