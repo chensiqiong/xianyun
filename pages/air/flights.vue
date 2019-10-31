@@ -1,0 +1,129 @@
+<template>
+  <div class="flights">
+    <!-- 版心开始 -->
+    <div class="flights-container">
+      <!-- 正文内容开始-->
+      <div class="flights-main">
+        <!-- 筛选开始 -->
+        <filterFlights
+          v-if="flightsData.flights.length"
+          :flightsInfo="flightsData.info"
+          :flightsArr="flightsData.flights"
+        ></filterFlights>
+        <!-- 筛选结束 -->
+        <!-- 机票列表开始 -->
+        <flightsHead></flightsHead>
+        <flightsItem :flightsItem="item" v-for="item in flightsPagition" :key="item.id"></flightsItem>
+        <!-- 机票列表结束 -->
+        <!-- 分页器开始 -->
+        <div class="pagination">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="pagination.pageIndex"
+            :page-sizes="pagination.pageSizes"
+            :page-size="pagination.pageSize"
+            :total="pagination.total"
+            layout="total, sizes, prev, pager, next, jumper"
+          ></el-pagination>
+        </div>
+        <!-- 分页器结束 -->
+      </div>
+      <!-- 正文内容结束 -->
+      <!-- 侧边栏开始 -->
+      <div class="flights-side">2</div>
+    </div>
+    <!-- 侧边栏结束 -->
+    <!-- 版心结束 -->
+  </div>
+</template>
+
+<script>
+import filterFlights from "@/components/air/filterFlights.vue";
+import flightsItem from "@/components/air/flightsList_item.vue";
+import flightsHead from "@/components/air/flightsList_head.vue";
+export default {
+  data() {
+    return {
+      flightsData: {
+        flights: [],
+        info: {},
+        options: {}
+      },
+      // 分页器数据
+      pagination: {
+        pageIndex: 1,
+        pageSizes: [2, 4, 6, 8],
+        pageSize: 2,
+        total: "" - 0
+      },
+      // 用来分页的数据，即flightsData中的flights数组
+      flightsList: [],
+      // 被分页后的数据，就是每页显示的数据
+      flightsPagition: []
+    };
+  },
+  mounted() {
+    this.$axios
+      .get("/airs", { params: this.$route.query })
+      .then(res => {
+        if (res.status === 200) {
+          console.log(res);
+          this.flightsData = res.data;
+          this.flightsList = res.data.flights;
+          this.pagination.total = this.flightsList.length;
+          // 分页
+          this.flightsPagition = this.flightsList.slice(
+            (this.pagination.pageIndex - 1) * this.pagination.pageSize,
+            this.pagination.pageSize * this.pagination.pageIndex
+          );
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
+  components: {
+    filterFlights,
+    flightsItem,
+    flightsHead
+  },
+  methods: {
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.pagination.pageSize = val;
+      this.flightsPagition = this.flightsList.slice(
+        (this.pagination.pageIndex - 1) * this.pagination.pageSize,
+        this.pagination.pageSize * this.pagination.pageIndex
+      );
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.pagination.pageIndex = val;
+      this.flightsPagition = this.flightsList.slice(
+        (this.pagination.pageIndex - 1) * this.pagination.pageSize,
+        this.pagination.pageSize * this.pagination.pageIndex
+      );
+    }
+  }
+};
+</script>
+
+<style lang="less" scoped>
+.flights-container {
+  width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  .flights-main {
+    flex: 3;
+    padding-right: 16px;
+    .pagination {
+      padding: 10px 0 10px 36px;
+    }
+  }
+  .flights-side {
+    flex: 1;
+    background-color: pink;
+  }
+}
+</style>
