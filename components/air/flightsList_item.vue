@@ -2,7 +2,7 @@
   <div class="flights_list_main">
     <div class="flights_item">
       <div class="item_main" @click="isShow = !isShow">
-        <div class="item_name">{{flightsItem.airline_name}} {{flightsItem.flight_no}}</div>
+        <div class="item_name">{{flightsItem.airline_name}} {{flightsItem.flight_no}} {{flightsItem.plane_size}}</div>
         <div class="item_depart_date">
           <p>{{flightsItem.dep_time}}</p>
           <p>&nbsp;&nbsp;{{flightsItem.org_airport_name}}{{flightsItem.org_airport_quay}}</p>
@@ -52,18 +52,36 @@ export default {
     };
   },
   mounted() {
-    console.log(this.flightsItem);
+    // console.log(this.flightsItem.dep_datetime);
+    // console.log(this.startDate);
   },
   computed: {
     // 处理时间间隔
     duration() {
-      let startTime = new Date(this.flightsItem.dep_datetime);
-      let arriveTime = new Date(this.flightsItem.arr_datetime);
-      let duration = arriveTime - startTime;
-      let hours = parseInt(duration / 1000 / 60 / 60);
-      let minutes = duration / 1000 / 60 - hours * 60;
-      return `${hours}时${minutes}分`;
+      let startTime = this.flightsItem.dep_datetime;
+      let endTime = this.flightsItem.arr_datetime;
+      let startDate = new Date(startTime);
+      let endDate = new Date(endTime);
+      let duration = endDate - startDate;
+      let hour = parseInt(duration / 1000 / 60 / 60);
+      let minutes = duration / 1000 / 60 - hour * 60;
+      return `${hour}时${minutes}分`;
     }
+  },
+  filters: {
+    // timeFormat(time, spe) {
+    //   // 时间格式化
+    //   spe = spe || "-";
+    //   time = new Date(time);
+    //   let year = time.getFullYear();
+    //   let month = time.getMonth() + 1;
+    //   let day = time.getDate();
+    //   let hour = time.getHour()
+    //   let minute = time.getMinutes()
+    //   let second = time.getSeconds()
+    //   // 返回结果
+    //   return year + spe + month + spe + day ;
+    // }
   }
 };
 </script>

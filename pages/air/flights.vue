@@ -8,7 +8,8 @@
         <filterFlights
           v-if="flightsData.flights.length"
           :flightsInfo="flightsData.info"
-          :flightsArr="flightsData.flights"
+          :flightsOptions="flightsData.options"
+          @selectChange="selectChange"
         ></filterFlights>
         <!-- 筛选结束 -->
         <!-- 机票列表开始 -->
@@ -60,7 +61,9 @@ export default {
       // 用来分页的数据，即flightsData中的flights数组
       flightsList: [],
       // 被分页后的数据，就是每页显示的数据
-      flightsPagition: []
+      flightsPagition: [],
+      // 筛选条件过后的数组
+      filterList: []
     };
   },
   mounted() {
@@ -94,6 +97,7 @@ export default {
             console.log(err);
           });
       } else {
+        this.pagination.total = this.flightsList.length;
         this.flightsPagition = this.flightsList.slice(
           (this.pagination.pageIndex - 1) * this.pagination.pageSize,
           this.pagination.pageSize * this.pagination.pageIndex
@@ -108,6 +112,26 @@ export default {
     handleCurrentChange(val) {
       // console.log(`当前页: ${val}`);
       this.pagination.pageIndex = val;
+      this.init();
+    },
+    selectChange(filter) {
+      // console.log(filter);
+      this.flightsList = this.flightsData.flights.filter(v => {
+        // 筛选起飞机场
+        let ok1 =
+          filter.airport === "" || v.org_airport_name === filter.airport;
+        let ok2 = filter.company === "" || v.airline_name === filter.company;
+        let ok3 = filter.sizes === "" || v.plane_size === filter.sizes;
+        let from = +filter.flightTimes.split("|")[0];
+        let to = +filter.flightTimes.split("|")[1];
+        let depFrom =
+          +v.dep_time.split(":")[0] + +v.dep_time.split(":")[1] / 60;
+        let ok4 =
+          filter.flightTimes === "" || (depFrom >= from && depFrom <= to);
+        return ok1 && ok2 && ok3 && ok4;
+      });
+      // this.flightsList = flightsList;
+      console.log(this.flightsList);
       this.init();
     }
   }

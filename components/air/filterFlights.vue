@@ -4,9 +4,14 @@
       <div class="main_path">单程：{{flightsInfo.departCity}} - {{flightsInfo.destCity}} / 2019-10-31</div>
       <div class="main_selects">
         <div class="select_item">
-          <el-select v-model="value" placeholder="请选择" size="mini">
+          <el-select
+            v-model="filterData.airport"
+            placeholder="起飞机场"
+            size="mini"
+            @change="handlerChange"
+          >
             <el-option
-              v-for="item in options"
+              v-for="item in filterOptions.airport"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -14,9 +19,14 @@
           </el-select>
         </div>
         <div class="select_item">
-          <el-select v-model="value" placeholder="请选择" size="mini">
+          <el-select
+            v-model="filterData.flightTimes"
+            placeholder="起飞时间"
+            size="mini"
+            @change="handlerChange"
+          >
             <el-option
-              v-for="item in options"
+              v-for="item in filterOptions.flightTimes"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -24,9 +34,14 @@
           </el-select>
         </div>
         <div class="select_item">
-          <el-select v-model="value" placeholder="请选择" size="mini">
+          <el-select
+            v-model="filterData.company"
+            placeholder="航空公司"
+            size="mini"
+            @change="handlerChange"
+          >
             <el-option
-              v-for="item in options"
+              v-for="item in filterOptions.company"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -34,9 +49,14 @@
           </el-select>
         </div>
         <div class="select_item">
-          <el-select v-model="value" placeholder="请选择" size="mini">
+          <el-select
+            v-model="filterData.sizes"
+            placeholder="机型"
+            size="mini"
+            @change="handlerChange"
+          >
             <el-option
-              v-for="item in options"
+              v-for="item in filterOptions.sizes"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -54,36 +74,54 @@
 
 <script>
 export default {
-  props: ["flightsInfo"],
+  props: ["flightsInfo", "flightsOptions"],
   data() {
     return {
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎"
-        },
-        {
-          value: "选项4",
-          label: "龙须面"
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭"
-        }
-      ],
-      value: ""
+      filterData: {
+        airport: "",
+        flightTimes: "",
+        company: "",
+        sizes: ""
+      }
     };
   },
-  mounted() {
-    console.log(this.flightsInfo);
+  computed: {
+    // console.log(this.flightsInfo);
+    // 过滤选项
+    filterOptions() {
+      // 起飞机场 airport
+      let airport = [];
+      this.flightsOptions.airport.forEach(v => {
+        v && airport.push({ value: v, label: v });
+      });
+      // console.log(airport);
+
+      // 起飞时间
+      let flightTimes = this.flightsOptions.flightTimes.map(v => ({
+        label: `${v.from}:00 - ${v.to}:00`,
+        value: v.from + "|" + v.to
+      }));
+
+      // 航空公司
+      let company = this.flightsOptions.company.map(v => ({
+        value: v,
+        label: v
+      }));
+
+      // 机型
+      let sizes = [
+        { value: "L", label: "大" },
+        { value: "M", label: "中" },
+        { value: "S", label: "小" }
+      ];
+      return { airport, flightTimes, company, sizes };
+    }
+  },
+  methods: {
+    handlerChange() {
+      console.log(this.filterData);
+      this.$emit("selectChange", this.filterData);
+    }
   }
 };
 </script>
