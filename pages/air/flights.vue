@@ -54,7 +54,7 @@ export default {
       pagination: {
         pageIndex: 1,
         pageSizes: [2, 4, 6, 8],
-        pageSize: 2,
+        pageSize: 8,
         total: "" - 0
       },
       // 用来分页的数据，即flightsData中的flights数组
@@ -64,24 +64,7 @@ export default {
     };
   },
   mounted() {
-    this.$axios
-      .get("/airs", { params: this.$route.query })
-      .then(res => {
-        if (res.status === 200) {
-          console.log(res);
-          this.flightsData = res.data;
-          this.flightsList = res.data.flights;
-          this.pagination.total = this.flightsList.length;
-          // 分页
-          this.flightsPagition = this.flightsList.slice(
-            (this.pagination.pageIndex - 1) * this.pagination.pageSize,
-            this.pagination.pageSize * this.pagination.pageIndex
-          );
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    this.init(true);
   },
   components: {
     filterFlights,
@@ -89,21 +72,43 @@ export default {
     flightsHead
   },
   methods: {
+    // 分页
+    init(isFirst) {
+      if (isFirst) {
+        this.$axios
+          .get("/airs", { params: this.$route.query })
+          .then(res => {
+            if (res.status === 200) {
+              console.log(res);
+              this.flightsData = res.data;
+              this.flightsList = res.data.flights;
+              this.pagination.total = this.flightsList.length;
+              // 分页
+              this.flightsPagition = this.flightsList.slice(
+                (this.pagination.pageIndex - 1) * this.pagination.pageSize,
+                this.pagination.pageSize * this.pagination.pageIndex
+              );
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      } else {
+        this.flightsPagition = this.flightsList.slice(
+          (this.pagination.pageIndex - 1) * this.pagination.pageSize,
+          this.pagination.pageSize * this.pagination.pageIndex
+        );
+      }
+    },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      // console.log(`每页 ${val} 条`);
       this.pagination.pageSize = val;
-      this.flightsPagition = this.flightsList.slice(
-        (this.pagination.pageIndex - 1) * this.pagination.pageSize,
-        this.pagination.pageSize * this.pagination.pageIndex
-      );
+      this.init();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      // console.log(`当前页: ${val}`);
       this.pagination.pageIndex = val;
-      this.flightsPagition = this.flightsList.slice(
-        (this.pagination.pageIndex - 1) * this.pagination.pageSize,
-        this.pagination.pageSize * this.pagination.pageIndex
-      );
+      this.init();
     }
   }
 };

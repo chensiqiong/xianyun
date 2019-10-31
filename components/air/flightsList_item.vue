@@ -4,12 +4,12 @@
       <div class="item_main" @click="isShow = !isShow">
         <div class="item_name">{{flightsItem.airline_name}} {{flightsItem.flight_no}}</div>
         <div class="item_depart_date">
-          <p>{{flightsItem.arr_date}}</p>
+          <p>{{flightsItem.dep_time}}</p>
           <p>&nbsp;&nbsp;{{flightsItem.org_airport_name}}{{flightsItem.org_airport_quay}}</p>
         </div>
         <div class="duration">2时20分</div>
         <div class="item_dest_date">
-          <p>{{flightsItem.dep_date}}</p>
+          <p>{{flightsItem.arr_time}}</p>
           <p>{{flightsItem.dst_airport_name}}{{flightsItem.dst_airport_quay}}</p>
         </div>
         <div class="item_price">
@@ -79,7 +79,7 @@ export default {
       .item_dest_date {
         text-align: center;
         p:nth-child(1) {
-          font-size: 14px;
+          font-size: 24px;
           font-weight: 400;
           margin: 0;
         }
