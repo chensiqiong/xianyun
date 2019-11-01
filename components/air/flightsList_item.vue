@@ -2,7 +2,9 @@
   <div class="flights_list_main">
     <div class="flights_item">
       <div class="item_main" @click="isShow = !isShow">
-        <div class="item_name">{{flightsItem.airline_name}} {{flightsItem.flight_no}} {{flightsItem.plane_size}}</div>
+        <div
+          class="item_name"
+        >{{flightsItem.airline_name}} {{flightsItem.flight_no}} {{flightsItem.plane_size}}</div>
         <div class="item_depart_date">
           <p>{{flightsItem.dep_time}}</p>
           <p>&nbsp;&nbsp;{{flightsItem.org_airport_name}}{{flightsItem.org_airport_quay}}</p>
@@ -31,7 +33,11 @@
             <div class="seat_row_price">￥{{value.par_price}}</div>
             <div class="seat_row_btns">
               <div>
-                <el-button type="warning" size="mini">选定</el-button>
+                <el-button
+                  type="warning"
+                  size="mini"
+                  @click="bookFlight(value.seat_xid,flightsItem.id)"
+                >选定</el-button>
                 <p>剩余{{value.discount}}</p>
               </div>
             </div>
@@ -68,20 +74,12 @@ export default {
       return `${hour}时${minutes}分`;
     }
   },
-  filters: {
-    // timeFormat(time, spe) {
-    //   // 时间格式化
-    //   spe = spe || "-";
-    //   time = new Date(time);
-    //   let year = time.getFullYear();
-    //   let month = time.getMonth() + 1;
-    //   let day = time.getDate();
-    //   let hour = time.getHour()
-    //   let minute = time.getMinutes()
-    //   let second = time.getSeconds()
-    //   // 返回结果
-    //   return year + spe + month + spe + day ;
-    // }
+
+  methods: {
+    bookFlight(id, seat_xid) {
+      console.log(id, seat_xid);
+      this.$router.push({ path: "/air/airOrders", query: { id, seat_xid } });
+    }
   }
 };
 </script>
@@ -136,7 +134,7 @@ export default {
         transform: translate(-50%, -50%);
         font-size: 12px;
         color: #666;
-        padding-bottom: 20px;
+        padding-bottom: 8px;
         border-bottom: 1px solid #ccc;
       }
     }

@@ -45,6 +45,7 @@
         <el-form-item label="选择日期">
           <el-col :span="24">
             <el-date-picker
+              value-format="yyyy-MM-dd"
               v-model="searchForm.departDate"
               size="medium"
               type="date"
@@ -68,11 +69,11 @@ export default {
     return {
       currentIndex: 0,
       searchForm: {
-        departCity: "广州",
-        departCode: "",
+        departCity: "北京",
+        departCode: "BJS",
         destCity: "上海",
-        destCode: "",
-        departDate: ""
+        destCode: "SHA",
+        departDate: "2019-11-28"
       }
     };
   },
@@ -106,10 +107,10 @@ export default {
     },
     handleSelectDepart(item) {
       // console.log(item);
-      this.searchForm.departCode = item.code;
+      this.searchForm.departCode = item.sort;
     },
     handleSelectDest(item) {
-      this.searchForm.destCode = item.code;
+      this.searchForm.destCode = item.sort;
     },
     changeCity() {
       // 交换出发城市和到达城市
@@ -128,6 +129,21 @@ export default {
     search() {
       console.log(this.searchForm);
       this.$router.push({ path: "/air/flights", query: this.searchForm });
+      let history = localStorage.getItem("air_history");
+      let historyArr = JSON.parse(history);
+      historyArr = historyArr || [];
+      console.log(historyArr);
+
+      let index = historyArr.findIndex(v => {
+        return JSON.stringify(v) === JSON.stringify(this.searchForm);
+      });
+      if (index !== -1) {
+        historyArr.splice(index, 1);
+      }
+
+      historyArr.unshift(this.searchForm);
+      let historyStr = JSON.stringify(historyArr);
+      localStorage.setItem("air_history", historyStr);
     }
   }
 };

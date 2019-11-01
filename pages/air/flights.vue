@@ -32,7 +32,9 @@
       </div>
       <!-- 正文内容结束 -->
       <!-- 侧边栏开始 -->
-      <div class="flights-side">2</div>
+      <div class="flights-side">
+        <history v-if="historyList.length" :historyList="historyList"></history>
+      </div>
     </div>
     <!-- 侧边栏结束 -->
     <!-- 版心结束 -->
@@ -43,6 +45,7 @@
 import filterFlights from "@/components/air/filterFlights.vue";
 import flightsItem from "@/components/air/flightsList_item.vue";
 import flightsHead from "@/components/air/flightsList_head.vue";
+import history from "@/components/air/history.vue";
 export default {
   data() {
     return {
@@ -62,17 +65,18 @@ export default {
       flightsList: [],
       // 被分页后的数据，就是每页显示的数据
       flightsPagition: [],
-      // 筛选条件过后的数组
-      filterList: []
+      historyList: []
     };
   },
   mounted() {
     this.init(true);
+    this.historyList = JSON.parse(localStorage.getItem("air_history"));
   },
   components: {
     filterFlights,
     flightsItem,
-    flightsHead
+    flightsHead,
+    history
   },
   methods: {
     // 分页
@@ -152,7 +156,7 @@ export default {
   }
   .flights-side {
     flex: 1;
-    background-color: pink;
+    margin-top: 120px;
   }
 }
 </style>

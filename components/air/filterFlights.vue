@@ -122,7 +122,8 @@ export default {
       console.log(this.filterData);
       this.$emit("selectChange", this.filterData);
     }
-  }
+  },
+  mounted() {}
 };
 </script>
 
