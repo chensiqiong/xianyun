@@ -1,7 +1,9 @@
 <template>
   <div class="flights_filter">
     <div class="filter_main">
-      <div class="main_path">单程：{{flightsInfo.departCity}} - {{flightsInfo.destCity}} / 2019-10-31</div>
+      <div
+        class="main_path"
+      >单程：{{flightsInfo.departCity}} - {{flightsInfo.destCity}} / {{flightsInfo.departDate}}</div>
       <div class="main_selects">
         <div class="select_item">
           <el-select
@@ -94,6 +96,10 @@ export default {
       this.flightsOptions.airport.forEach(v => {
         v && airport.push({ value: v, label: v });
       });
+      // let airport = this.flightsOptions.airport.map(v => ({
+      //   value: v,
+      //   label: v
+      // }));
       // console.log(airport);
 
       // 起飞时间

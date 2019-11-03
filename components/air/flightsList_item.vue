@@ -30,7 +30,7 @@
               <span>{{value.name}}</span>
               | {{value.supplierName}}
             </div>
-            <div class="seat_row_price">￥{{value.par_price}}</div>
+            <div class="seat_row_price">￥{{value.settle_price}}</div>
             <div class="seat_row_btns">
               <div>
                 <el-button
@@ -76,9 +76,8 @@ export default {
   },
 
   methods: {
-    bookFlight(id, seat_xid) {
-      console.log(id, seat_xid);
-      this.$router.push({ path: "/air/airOrders", query: { id, seat_xid } });
+    bookFlight(seat_xid, id) {
+      this.$router.push({ path: "/air/order", query: { seat_xid, id } });
     }
   }
 };

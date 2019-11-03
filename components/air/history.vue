@@ -36,10 +36,17 @@ export default {
     border-bottom: 1px solid #eee;
   }
   .history_list {
+    > div {
+      &:last-child {
+        border-bottom: none;
+      }
+    }
     .history_item {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: 1px solid #eee;
+
       .history_content {
         span {
           font-size: 12px;

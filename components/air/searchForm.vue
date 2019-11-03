@@ -5,7 +5,7 @@
         v-for="(item, index) in ['单程', '往返']"
         :key="index"
         :class="{'title-item': true, 'active': currentIndex === index}"
-        @click="currentIndex = index"
+        @click="changeIndex(index)"
       >{{item}}</div>
     </div>
     <div class="air-form-inputs">
@@ -132,6 +132,7 @@ export default {
       let history = localStorage.getItem("air_history");
       let historyArr = JSON.parse(history);
       historyArr = historyArr || [];
+
       console.log(historyArr);
 
       let index = historyArr.findIndex(v => {
@@ -140,10 +141,22 @@ export default {
       if (index !== -1) {
         historyArr.splice(index, 1);
       }
-
+      if (historyArr.length > 6) {
+        historyArr.splice(-1, 1);
+      }
       historyArr.unshift(this.searchForm);
       let historyStr = JSON.stringify(historyArr);
       localStorage.setItem("air_history", historyStr);
+    },
+    changeIndex(index) {
+      this.currentIndex = index;
+      if (index === 1) {
+        this.$alert("目前暂不支持往返，请使用单程选票！", "提示", {
+          confirmButtonText: "确定",
+          type: "warning"
+        });
+        this.currentIndex = 0;
+      }
     }
   }
 };
