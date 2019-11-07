@@ -5,7 +5,7 @@
         <el-form-item>
           <el-autocomplete
             class="inline-input"
-            v-model="state2"
+            v-model="cityName"
             :fetch-suggestions="querySearch"
             placeholder="目的地"
             @select="handleSelect"
@@ -75,7 +75,7 @@ export default {
       value6: "",
       isShow: false,
       options: ["1", "2"],
-      state2: "南京",
+      cityName: "",
       filterForm: {
         city: "",
         enterTime: "",

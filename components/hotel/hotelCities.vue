@@ -4,7 +4,12 @@
       <span class="title">区域：</span>
       <div class="text">
         <span class="area_all">全部</span>
-        <span class="area_item" v-for="item in cities.scenics" :key="item.id">{{item.name}}</span>
+        <span
+          class="area_item"
+          v-for="item in cities.scenics"
+          :key="item.id"
+          @click="handlerArea(item.name)"
+        >{{item.name}}</span>
 
         <div>
           <i class="el-icon-d-arrow-right"></i>
@@ -39,39 +44,16 @@
           effect="dark"
           content="等级评价是针对房价、设施和服务等各方面水平的综合评价。"
           placement="bottom-start"
+          v-for="(item, index) in hotelsData.data"
+          :key="index"
         >
           <span class="price_item">
-            <i class="iconfont iconhuangguan"></i> ￥332
-          </span>
-        </el-tooltip>
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="等级评价是针对房价、设施和服务等各方面水平的综合评价。"
-          placement="bottom-start"
-        >
-          <span class="price_item">
-            <i class="iconfont iconhuangguan"></i> ￥332
-          </span>
-        </el-tooltip>
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="等级评价是针对房价、设施和服务等各方面水平的综合评价。"
-          placement="bottom-start"
-        >
-          <span class="price_item">
-            <i class="iconfont iconhuangguan"></i> ￥332
-          </span>
-        </el-tooltip>
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="等级评价是针对房价、设施和服务等各方面水平的综合评价。"
-          placement="bottom-start"
-        >
-          <span class="price_item">
-            <i class="iconfont iconhuangguan"></i> ￥332
+            <i
+              class="iconfont iconhuangguan"
+              v-for="(i,index) in Math.floor(item.stars)"
+              :key="index"
+            ></i>
+            {{item.price * 5}}
           </span>
         </el-tooltip>
       </div>
@@ -83,10 +65,18 @@
 export default {
   props: {
     cities: Object,
+    default: {},
+    hotelsData: Object,
     default: {}
   },
+
   mounted() {
     console.log(this.cities);
+  },
+  methods: {
+    handlerArea(name) {
+      this.$emit("handlerArea", name);
+    }
   }
 };
 </script>
@@ -148,7 +138,7 @@ export default {
     }
 
     .price_item {
-      padding-right: 30px;
+      padding-right: 20px;
       .iconhuangguan {
         color: #f90;
       }

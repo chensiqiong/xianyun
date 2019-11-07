@@ -6,7 +6,7 @@
         <span>0 - {{options.price_in}}</span>
       </div>
       <div class="block">
-        <el-slider v-model="options.price_in" :max="4000" @change="changeOptions"></el-slider>
+        <el-slider v-model="options.price_in" :max="4000" @change="handlerPriceChange"></el-slider>
       </div>
     </div>
     <div class="option_item br">
@@ -15,7 +15,8 @@
       </div>
       <el-dropdown>
         <span class="el-dropdown-link">
-          <span>2星</span>
+          <span v-if="options.hotellevel.length === 0">不限</span>
+          <span v-else>已选{{options.hotellevel.length}}项</span>
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
@@ -27,7 +28,7 @@
             >
               <el-checkbox
                 :label="optionsData.levels[index].id"
-                @change="changeOptions(item.id)"
+                @change="handlerLevelChange(item.id)"
               >{{item.name}}</el-checkbox>
             </div>
           </el-checkbox-group>
@@ -40,7 +41,8 @@
       </div>
       <el-dropdown>
         <span class="el-dropdown-link">
-          <span>不限</span>
+          <span v-if="options.hoteltype.length === 0">不限</span>
+          <span v-else>已选{{options.hoteltype.length}}项</span>
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
@@ -52,7 +54,7 @@
             >
               <el-checkbox
                 :label="optionsData.types[index].id"
-                @change="changeOptions(item.id)"
+                @change="handlerTypeChange(item.id)"
               >{{item.name}}</el-checkbox>
             </div>
           </el-checkbox-group>
@@ -65,7 +67,8 @@
       </div>
       <el-dropdown>
         <span class="el-dropdown-link">
-          <span>不限</span>
+          <span v-if="options.hotelasset.length === 0">不限</span>
+          <span v-else>已选{{options.hotelasset.length}}项</span>
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
@@ -77,7 +80,7 @@
             >
               <el-checkbox
                 :label="optionsData.assets[index].id"
-                @change="changeOptions(item.id)"
+                @change="handlerAssetChange(item.id)"
               >{{item.name}}</el-checkbox>
             </div>
           </el-checkbox-group>
@@ -90,7 +93,8 @@
       </div>
       <el-dropdown>
         <span class="el-dropdown-link">
-          <span>2星</span>
+          <span v-if="options.hotelbrand.length === 0">不限</span>
+          <span v-else>已选{{options.hotelbrand.length}}项</span>
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
@@ -102,7 +106,7 @@
             >
               <el-checkbox
                 :label="optionsData.brands[index].id"
-                @change="changeOptions(item.id)"
+                @change="handlerBrandChange(item.id)"
               >{{item.name}}</el-checkbox>
             </div>
           </el-checkbox-group>
@@ -116,6 +120,7 @@
 export default {
   data() {
     return {
+      // 传给父组件的数据
       options: {
         price_in: 0,
         hotellevel: [],
@@ -123,6 +128,7 @@ export default {
         hotelbrand: [],
         hotelasset: []
       },
+
       optionsData: {
         levels: [],
         types: [],
@@ -140,9 +146,71 @@ export default {
     });
   },
   methods: {
-    changeOptions(value) {
-      console.log(this.options);
-      this.$emit("changeOptions", this.options);
+    handlerPriceChange() {
+      this.handlerOptions();
+    },
+    handlerLevelChange(value) {
+      this.handlerArr(this.options.hotellevel, value);
+      this.handlerOptions();
+    },
+    handlerTypeChange(value) {
+      this.handlerArr(this.options.hoteltype, value);
+      this.handlerOptions();
+    },
+    handlerAssetChange(value) {
+      this.handlerOptions(this.options.hotelasset, value);
+    },
+    handlerBrandChange(value) {
+      this.handlerOptions(this.options.hotelbrand, value);
+    },
+    handlerArr(arr, value) {
+      let index = arr.findIndex(v => v === value);
+      let arr1 = [];
+      if (index !== -1) {
+        arr1.splice(index, 1);
+      } else {
+        arr1.push(value);
+      }
+      return arr1;
+    },
+    handlerOptions() {
+      // console.log(this.options);
+      // let index = arr.find(v => v === value);
+      // if (index !== -1) {
+      //   arr.splice(index, 1);
+      // }
+
+      let paramsStr = "";
+      // if (this.options.price_in) {
+      //   paramsStr += `&peice_in=${this.options.price_in}`;
+      // }
+      if (this.options.hotellevel.length > 0) {
+        this.options.hotellevel.forEach(e => {
+          paramsStr += `&hotellevel=${e}`;
+        });
+      }
+      if (this.options.hoteltype.length > 0) {
+        this.options.hoteltype.forEach(e => {
+          paramsStr += `&hoteltype=${e}`;
+        });
+      }
+      if (this.options.hotelbrand.length > 0) {
+        this.options.hotelbrand.forEach(e => {
+          paramsStr += `&hotelbrand=${e}`;
+        });
+      }
+      if (this.options.hotelasset.length > 0) {
+        this.options.hotelasset.forEach(e => {
+          paramsStr += `&hotelasset=${e}`;
+        });
+      }
+      // let index = paramsStr.lastIndexOf("&");
+      // // console.log(index);
+      // paramsStr = paramsStr.substring(0, index);
+      // // console.log(paramsStr);
+      console.log(paramsStr);
+
+      this.$emit("changeOptions", paramsStr);
     }
   }
 };
