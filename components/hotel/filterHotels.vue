@@ -35,10 +35,11 @@
               <div class="select">
                 <el-select multiple placeholder="请选择" style="width: 100px;" size="small">
                   <el-option
-                    v-for="item in options"
+                    v-for="item in ['1人','2人','3人','4人']"
                     :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    v-model="person1"
+                    :label="item"
+                    :value="item"
                   ></el-option>
                 </el-select>
 
@@ -50,16 +51,18 @@
                   size="small"
                 >
                   <el-option
-                    v-for="item in options"
+                    v-for="item in ['1人','2人','3人','4人']"
                     :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    v-model="person2"
+                    :label="item"
+                    :value="item"
                   ></el-option>
                 </el-select>
               </div>
             </div>
             <div class="btn">
               <el-button style="float: right;" size="mini" type="primary">确定</el-button>
+              <el-button style="float: right;" size="mini" type="primary" @click="cancel">取消</el-button>
             </div>
           </el-card>
         </el-form-item>
@@ -80,7 +83,9 @@ export default {
         city: "",
         enterTime: "",
         leftTime: ""
-      }
+      },
+      person1: "",
+      person2: ""
     };
   },
   mounted() {
@@ -128,6 +133,9 @@ export default {
       console.log(this.filterForm);
 
       this.$emit("getHotels", this.filterForm);
+    },
+    cancel() {
+      this.isShow = false;
     }
   },
   mounted() {}
